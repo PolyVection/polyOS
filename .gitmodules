@@ -1,9 +1,9 @@
-[submodule "poky"]
-	path = poky
+[submodule "sources/poky"]
+	path = sources/poky
 	url = git://git.yoctoproject.org/poky.git
-[submodule "meta-freescale"]
-	path = meta-freescale
+[submodule "sources/meta-freescale"]
+	path = sources/meta-freescale
 	url = https://github.com/Freescale/meta-freescale.git
-[submodule "meta-openembedded"]
-	path = meta-openembedded
+[submodule "sources/meta-openembedded"]
+	path = sources/meta-openembedded
 	url = https://github.com/openembedded/meta-openembedded.git
