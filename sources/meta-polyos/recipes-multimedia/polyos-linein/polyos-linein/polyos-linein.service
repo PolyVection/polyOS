@@ -1,0 +1,15 @@
+[Unit]
+Description=PolyOS LINE-IN
+After=network-online.target
+
+[Service]
+Type=idle
+User=root
+ExecStart=/usr/sbin/polyos-linein
+Restart=always
+RestartSec=1
+StartLimitInterval=30
+StartLimitBurst=20
+
+[Install]
+WantedBy=multi-user.target

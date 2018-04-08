@@ -1,0 +1,37 @@
+###################################################                                                                                                                                                                                          
+# file located at /lib/systemd/system/squeezelite.service
+# use "systemctl enable squeezelite.service to load
+# based on a template from RPMFusion and R.G. Newbury from this thread:
+# http://www.gossamer-threads.com/lists/mythtv/users/516650?search_string=mythbackend.service%20;#516650
+
+#Usage: ./squeezelite [options] [<server_ip>]
+#  <server_ip>           Connect to server server at given IP address, otherwise uses autodiscovery
+#  -o <output device>    Specify output device, default "default"
+#  -l                    List output devices
+#  -a <time>:<count>     Specify ALSA buffer_time (ms) and period_count, default 20:4
+#  -b <stream>:<output>  Specify internal Stream and Output buffer sizes in Kbytes
+#  -c <codec1>,<codec2>  Restrict codecs those specified, otherwise loads all available codecs; known codecs: flac,pcm,mp3,ogg,aac
+#  -d <log>=<level>      Set logging level, logs: all|slimproto|stream|decode|output, level: info|debug|sdebug
+#  -f <logfile>          Write debug to logfile
+#  -m <mac addr>         Set mac address, format: ab:cd:ef:12:34:56
+#  -n <name>             Set the player name
+#  -r <rate>             Max sample rate for output device, enables output device to be off when squeezelite is started
+#  -z                    Daemonize
+#  -t                    License terms
+
+[Unit]
+Description=Squeezelite Daemon
+
+Requires=network.target sound.target
+After=network.target sound.target
+
+[Service]
+Type=simple
+
+#User=squeezeuser
+
+ExecStart=/bin/sh -c "/usr/bin/squeezelite -m $(ifconfig -a | grep wlan0 | awk '{print $5}') -a 80 -n %H -V Digital -C 1"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

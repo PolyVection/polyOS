@@ -1,0 +1,14 @@
+[Unit]
+Description=PolyOS RESTful API
+After=network-online.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/node /usr/sbin/polyos-restapi/polyos-restapi.js
+Restart=always
+RestartSec=5
+StartLimitInterval=30
+StartLimitBurst=20
+
+[Install]
+WantedBy=multi-user.target

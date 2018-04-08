@@ -1,0 +1,12 @@
+[Unit]
+Description=gmrender-resurrect service
+After=network.target sound.target
+
+[Service]
+ExecStart=/bin/sh -c '/usr/bin/gmediarender -f %H -u $(cat /sys/fsl_otp/HW_OCOTP_CFG0)$(cat /sys/fsl_otp/HW_OCOTP_CFG1) --gstout-initial-volume-db=-40'
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

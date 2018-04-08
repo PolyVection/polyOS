@@ -1,0 +1,12 @@
+[Unit]
+Description=PolyOS Data Partition Setup
+RequiresMountsFor=/mnt/data
+After=local-fs.target
+Before=connman.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/polyos-datapart
+
+[Install]
+RequiredBy=connman.service

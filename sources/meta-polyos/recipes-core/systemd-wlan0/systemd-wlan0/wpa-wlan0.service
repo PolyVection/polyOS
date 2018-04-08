@@ -1,0 +1,15 @@
+[Unit]
+Description=WPA supplicant daemon (interface-specific version)
+Requires=sys-subsystem-net-devices-wlan0.device
+After=sys-subsystem-net-devices-wlan0.device
+Before=network.target
+Wants=network.target
+
+# NetworkManager users will probably want the dbus version instead.
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/wpa_supplicant -c/mnt/data/settings/wireless/wifi.conf -Dwext -iwlan0
+
+[Install]
+Alias=multi-user.target.wants/wpa-wlan0.service

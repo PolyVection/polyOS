@@ -1,0 +1,2 @@
+#!/bin/sh
+arecord -f S16_LE -r48000 -c2 -D hw:imxaudiopcm186x -F0 --period-size=1024 -B0 --buffer-size=4096 | aplay -c 2 -D hw:is31ap2121

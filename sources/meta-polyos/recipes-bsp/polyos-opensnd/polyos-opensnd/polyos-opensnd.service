@@ -1,0 +1,10 @@
+[Unit]
+Description=PolyOS OpenSND
+After=sound.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/aplay /etc/wav/silence.wav
+
+[Install]
+WantedBy=multi-user.target

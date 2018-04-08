@@ -1,0 +1,130 @@
+#!/bin/sh
+
+URL_BASE="https://polyvection.com/software/polyos/voltastream0"
+WORKING_DIR="/mnt/data/update"
+ACTIVE_BANK=`fw_printenv swbank | cut -d= -f2` 
+INACTIVE_BANK=0
+CURRENT_OS="0.0.0.0000"
+UPDATE_OS="0.0.0.0000"
+
+if ! [ -e "/polyos_version" ]; then
+CURRENT_OS="0.0.0.0000"
+else CURRENT_OS=`cat /polyos_version`
+fi
+
+if [ $ACTIVE_BANK == 2 ]; then 
+INACTIVE_BANK=1
+else INACTIVE_BANK=2
+fi
+
+echo " "
+echo "##########################################"
+echo "PolyOS bank-$ACTIVE_BANK is active on your system."
+echo "Using bank-$INACTIVE_BANK for updates."
+echo "##########################################"
+echo " "
+
+if ! [ -d "$WORKING_DIR" ]; then
+  mkdir ${WORKING_DIR}
+  cd ${WORKING_DIR}  
+else 
+  rm -r ${WORKING_DIR}/*
+  cd ${WORKING_DIR} 
+fi
+
+
+function run_update {                            
+   echo " "
+   echo "Step 2 - fetching update"
+   echo "--------------------------------------------"    
+   DL_URL=`cat ${WORKING_DIR}/polyos_${UPDATE_OS}_update.link`
+   #echo ${DL_URL}
+   #wget -q --show-progress ${DL_URL}  
+   curl --progress-bar -O ${DL_URL} -o ${WORKING_DIR}
+
+   echo " "
+   echo " "
+   echo "Step 3 - verifying download"
+   echo "--------------------------------------------" 
+   echo "Verifying..."
+   DL_SUM=`sha256sum ${WORKING_DIR}/polyos_${UPDATE_OS}_update.tar.gz | cut -d " " -f1`
+   REMOTE_SUM=`cat ${WORKING_DIR}/polyos_${UPDATE_OS}_update.sha256`
+   #echo "Remote checksum: ${REMOTE_SUM}"
+   #echo "Downld checksum: ${DL_SUM}"
+ 
+   if [ $REMOTE_SUM == $DL_SUM ]; then                                                
+	echo "Verification PASSED"                                                               
+   else
+	echo "Verification FAILED"
+	echo "ABORTING!"
+	rm -r ${WORKING_DIR}/*
+	exit 1                                              
+   fi       
+ 
+   echo " "                                                       
+   echo " " 
+   echo "Step 4 - installing update"
+   echo "--------------------------------------------" 
+   sync
+   echo "Unpacking update... (will take some time)"
+   pv ${WORKING_DIR}/polyos_${UPDATE_OS}_update.tar.gz | tar -zxf - --to-command="dd of=/dev/mmcblk1p$INACTIVE_BANK bs=4M"
+   sync
+   echo "DONE"
+
+   echo " "
+   echo " "
+   echo "Step 5 - update u-boot vars"
+   echo "--------------------------------------------" 
+   fw_setenv swbank $INACTIVE_BANK
+   echo "DONE"
+   
+   echo " "
+   echo "####################################"
+   echo "UPDATE SUCCESSFUL"
+   echo "REBOOTING IN A FEW SECONDS!"
+   echo "####################################"  
+   echo " "
+   sync
+   reboot
+ 
+}   
+
+
+
+echo " " 
+echo "Step 1 - searching for updates"
+echo "--------------------------------------------"
+echo "Current PolyOS version: ${CURRENT_OS}"
+
+echo -e "GET http://polyvection.com HTTP/1.0\n\n" | nc polyvection.com 80 > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+    echo "Checking network: Online"
+else
+    echo "Checking network: Offline"
+    echo "OFFLINE - Exiting PolyOS updater"
+    echo " "
+    exit 1   
+fi
+
+curl -O -s ${URL_BASE}/polyos_latest_version -o ${WORKING_DIR}
+
+UPDATE_OS=`cat ${WORKING_DIR}/polyos_latest_version`   
+echo "Available PolyOS update: ${UPDATE_OS}" 
+echo " "
+
+curl -O -s ${URL_BASE}/polyos_${UPDATE_OS}_update.link -o ${WORKING_DIR}
+curl -O -s ${URL_BASE}/polyos_${UPDATE_OS}_update.sha256 -o ${WORKING_DIR}
+curl -O -s ${URL_BASE}/polyos_${UPDATE_OS}_changelog.txt -o ${WORKING_DIR}
+
+read -p "Press Y to install or N to abort: " -n 1 -r
+echo " "
+
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    run_update
+else 
+    echo "Exiting PolyOS updater"
+    echo " "
+    exit 1
+fi

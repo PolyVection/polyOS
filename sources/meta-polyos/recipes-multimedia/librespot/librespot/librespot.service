@@ -1,0 +1,15 @@
+[Unit]
+Description=Spotify Connect
+After=network-online.target
+
+[Service]
+Type=idle
+User=root
+ExecStart=/usr/sbin/librespot --name %H --bitrate 320 --backend alsa --mixer alsa --disable-audio-cache 
+Restart=always
+RestartSec=2
+StartLimitInterval=30
+StartLimitBurst=20
+
+[Install]
+WantedBy=multi-user.target

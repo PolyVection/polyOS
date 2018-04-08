@@ -1,0 +1,11 @@
+#!/bin/sh
+
+serial_hex=`cat /sys/fsl_otp/HW_OCOTP_GP1`
+serial_dec=`echo $(($serial_hex))`
+
+echo "Serial HEX: $serial_hex"
+echo "Serial DEC: $serial_dec"
+
+echo "Setting Hostname to VoltaStream0-$serial_dec"
+hostname "VoltaStream0-$serial_dec"
+echo "VoltaStream0-$serial_dec" > /etc/hostname

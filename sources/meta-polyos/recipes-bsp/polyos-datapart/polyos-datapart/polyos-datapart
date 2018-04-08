@@ -1,0 +1,68 @@
+#!/bin/sh
+
+SERIAL_HEX=`cat /sys/fsl_otp/HW_OCOTP_GP1`
+SERIAL_DEC=`echo $(($SERIAL_HEX))`
+TYPE_HEX=`cat /sys/fsl_otp/HW_OCOTP_GP2`
+POLYOS_SERVICE="/etc/avahi/services/polyos.service"
+POLYOS_VERSION=`cat /polyos_version`
+
+if ! [ -d "/mnt/data/settings/wireless/connman" ]; then
+
+        mkdir -p /mnt/data/settings/wireless/connman
+        rm -r /var/lib/connman
+fi
+if ! [ -d "/mnt/data/settings/audio/alsa" ]; then
+
+        mkdir -p /mnt/data/settings/audio/alsa
+	touch /mnt/data/settings/audio/alsa/asound.conf
+	echo "ctl.!default {" > /mnt/data/settings/audio/alsa/asound.conf
+	echo "type hw" >> /mnt/data/settings/audio/alsa/asound.conf
+	echo "card 1" >> /mnt/data/settings/audio/alsa/asound.conf
+	echo "}" >> /mnt/data/settings/audio/alsa/asound.conf
+	echo "pcm.!default {" >> /mnt/data/settings/audio/alsa/asound.conf
+	echo "type hw" >> /mnt/data/settings/audio/alsa/asound.conf
+	echo "card 1" >> /mnt/data/settings/audio/alsa/asound.conf
+	echo "}" >> /mnt/data/settings/audio/alsa/asound.conf
+        rm -r /etc/asound.conf
+	
+fi
+
+if ! [ -d "/mnt/data/settings/system" ]; then
+
+        mkdir -p /mnt/data/settings/system
+	echo "VoltaStream-$SERIAL_DEC" > /mnt/data/settings/system/hostname
+fi
+
+setting_host=`cat /mnt/data/settings/system/hostname`
+etc_host=`cat /etc/hostname`
+
+if [ "$etc_host" != "$setting_host" ]; then
+	echo "$setting_host" > /etc/hostname
+	reboot  
+fi
+
+
+
+if [ ! -f "$POLYOS_SERVICE" ]; then                                        
+                                                                           
+        echo '<?xml version="1.0" standalone="no"?>' > $POLYOS_SERVICE     
+        echo '<!DOCTYPE service-group SYSTEM "avahi-service.dtd">' >> $POLYOS_SERVICE
+        echo '<service-group>' >> $POLYOS_SERVICE                               
+        echo '<name replace-wildcards="yes">%h</name>' >> $POLYOS_SERVICE       
+        echo '<service>' >> $POLYOS_SERVICE                                     
+        echo '<type>_polyos._tcp</type>' >> $POLYOS_SERVICE                     
+        echo '<port>8080</port>' >> $POLYOS_SERVICE                             
+        echo '<txt-record>type='$TYPE_HEX'</txt-record>' >> $POLYOS_SERVICE     
+        echo '<txt-record>serial='$SERIAL_DEC'</txt-record>' >> $POLYOS_SERVICE
+	echo '<txt-record>os='$POLYOS_VERSION'</txt-record>' >> $POLYOS_SERVICE
+        echo '</service>' >> $POLYOS_SERVICE                                    
+        echo '</service-group>' >> $POLYOS_SERVICE                              
+                                                                                
+fi 
+
+mkdir /run/lock
+rm -r /var/lib/connman
+rm -r /etc/asound.conf
+ln -s -f /mnt/data/settings/audio/alsa/asound.conf /etc/asound.conf
+ln -s -f /mnt/data/settings/wireless/connman /var/lib/connman
+

@@ -1,0 +1,10 @@
+[Unit]
+Description=PolyOS Hostname
+Before=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/polyos-hostname
+
+[Install]
+RequiredBy=local-fs.target

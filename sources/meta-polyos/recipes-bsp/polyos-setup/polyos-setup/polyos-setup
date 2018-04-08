@@ -1,0 +1,114 @@
+#!/usr/bin/python3
+
+# Copyright (c) 2017, PolyVection UG.
+#
+# Based on configure-edison, Intel Corporation.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms and conditions of the GNU Lesser General Public License,
+# version 2.1, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+# more details.
+#
+
+import os
+import sys
+from sys import stdout
+import time
+import termios
+import fcntl
+import subprocess
+import signal
+#import urllib2
+import hashlib
+import argparse
+import json
+import re
+import polywifi
+import polyterminal
+import polyaudio
+from array import *
+
+
+
+def changeName(newName):
+  if WSREGEX.search(newName):
+      print("New name contains whitespaces. Ignoring")
+      return
+  _changeHostName(newName)
+
+def _changeHostName(newName):
+  hostname_file = open('/etc/hostname','w')
+  hostname_file.write(newName + "\n")
+  hostname_file.close();
+  subprocess.call("hostname -F /etc/hostname", shell=True)
+
+def setPolyName():
+  while 1:
+    name = input("Give this PolyOS board a unique name.\nMake it at least five characters long (leave empty to skip): ")
+    if (WSREGEX.search(name)):
+      print("")
+      print('Hostname must not contain whitespaces. Please try again.')
+      print("")
+    elif (len(name) == 0):
+      print("Skipping name change...")
+      break
+    elif (len(name) > 4):
+      if verified(name):
+        print("")
+        break
+      else:
+        print("")
+    else:
+      print("")
+      print('\"' + name + '\" is too short. Please try again.')
+      print("")
+
+  if len(name) > 0:
+      changeName(name)
+
+
+
+def firstTimeSetup():
+    polyterminal.printFTS()
+    polywifi.connectFTS()
+    polyaudio.chooseFTS()
+    restartStreaming()
+    polyterminal.printFTSfinished()
+
+def restartStreaming():
+    subprocess.check_output(["systemctl", "stop", "shairport-sync"], stderr=subprocess.STDOUT)
+    subprocess.check_output(["systemctl", "stop", "librespot"], stderr=subprocess.STDOUT)
+    subprocess.check_output(["systemctl", "stop", "gmediarenderer"], stderr=subprocess.STDOUT)
+    subprocess.check_output(["systemctl", "stop", "squeezelite"], stderr=subprocess.STDOUT)
+    time.sleep(3)
+    subprocess.check_output(["systemctl", "start", "shairport-sync"], stderr=subprocess.STDOUT)
+    subprocess.check_output(["systemctl", "start", "librespot"], stderr=subprocess.STDOUT)
+    subprocess.check_output(["systemctl", "start", "gmediarenderer"], stderr=subprocess.STDOUT)
+    subprocess.check_output(["systemctl", "start", "squeezelite"], stderr=subprocess.STDOUT)
+
+
+def main():
+
+    global CURR_PACKAGE_PATH
+    parser = argparse.ArgumentParser(prog='polyos-setup') 
+    root_group = parser.add_mutually_exclusive_group()
+    group_interactive = root_group.add_mutually_exclusive_group()
+    group_interactive.add_argument('--name', dest='name', help='Changes the device name', action='store_true', default=False)    
+
+    if len(sys.argv)==1:
+        firstTimeSetup();
+
+    args = parser.parse_args()
+
+    if args.name:
+        reset("Device Name")
+        setPolyName()
+
+
+
+if __name__ == "__main__":
+      main()
