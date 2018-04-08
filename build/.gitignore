@@ -1,0 +1,5 @@
+cache/
+tmp/
+bitbake-cookerdaemon.log
+conf/sanity_info
+conf/templateconf.cfg
