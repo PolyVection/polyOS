@@ -423,13 +423,13 @@ IMAGE_TYPEDEP_sdcard += " \
     ${@bb.utils.contains('IMAGE_FSTYPES', 'barebox-mxsboot-sdcard', 'barebox-mxsboot-sdcard', '', d)} \
 "
 
-ZIMAGE_PV = "/home/poly/dev/yocto-polyos/build/tmp/work/voltastream0-poky-linux-gnueabi/linux-imx-pv/4.1.15-r0/deploy-linux-imx-pv/zImage"
-DTB_PV_VS0 = "/home/poly/dev/yocto-polyos/build/tmp/work/voltastream0-poky-linux-gnueabi/linux-imx-pv/4.1.15-r0/build/arch/arm/boot/dts/imx6ull-voltastream0.dtb"
-DTB_PV_VSA1 = "/home/poly/dev/yocto-polyos/build/tmp/work/voltastream0-poky-linux-gnueabi/linux-imx-pv/4.1.15-r0/build/arch/arm/boot/dts/imx6ull-voltastream-amp1.dtb"
+ZIMAGE_PV = "${DEPLOY_DIR_IMAGE}/zImage"
+DTB_PV_VS0 = "${DEPLOY_DIR_IMAGE}/zImage-imx6ull-voltastream0.dtb"
+DTB_PV_VSA1 = "${DEPLOY_DIR_IMAGE}/zImage-imx6ull-voltastream-amp1.dtb"
 
 my_postprocess_function() {
-#   cp ${DTB_PV_VS0} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream0.dtb
-#   cp ${DTB_PV_VSA1} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream-amp1.dtb
+   cp ${DTB_PV_VS0} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream0.dtb
+   cp ${DTB_PV_VSA1} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream-amp1.dtb
 #   cp ${ZIMAGE_PV} ${IMAGE_ROOTFS}/boot/zImage
    echo ${DISTRO_VERSION} > ${IMAGE_ROOTFS}/polyos_version
    echo " " > ${IMAGE_ROOTFS}/etc/motd
