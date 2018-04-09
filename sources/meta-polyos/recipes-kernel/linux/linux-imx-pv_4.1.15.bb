@@ -6,9 +6,9 @@ DESCRIPTION = "Linux Kernel provided and supported by PolyVection for \
 PolyCore1 SoM and its peripherals."
 
 require recipes-kernel/linux/linux-imx.inc
-require recipes-kernel/linux/linux-dtb-pv.inc
+# require recipes-kernel/linux/linux-dtb-pv.inc
 
-inherit kernel fsl-kernel-localversion fsl-vivante-kernel-driver-handler
+# inherit kernel fsl-kernel-localversion fsl-vivante-kernel-driver-handler
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
@@ -26,7 +26,7 @@ SRC_URI = "${KERNEL_SRC};branch=${SRCBRANCH}"
 
 DEFAULT_PREFERENCE = "1"
 
-S = "${WORKDIR}/git"
+# S = "${WORKDIR}/git"
 
 do_preconfigure_prepend() {
    # copy latest defconfig for imx_v7_defoonfig to use

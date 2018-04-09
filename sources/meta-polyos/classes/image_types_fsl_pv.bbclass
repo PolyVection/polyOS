@@ -191,13 +191,13 @@ REL_URL_PV = "https://polyvection.com/software/polyos/voltastream0"
 
 # UGLY HACK #
 COLLECTOR = "${DEPLOY_DIR_IMAGE}/_COLLECTOR"
-UBOOT_DIR_POLY = "/home/poly/dev/yocto-polyos/build/tmp/work/voltastream0-poky-linux-gnueabi/u-boot-pv/2017.05-r0/deploy-u-boot-pv/u-boot-voltastream0.imx"
+UBOOT_DIR_POLY = "${DEPLOY_DIR_IMAGE}/u-boot-voltastream.imx"
 
-ROOT_EXT4 = "${IMGDEPLOYDIR}/polyos-image-voltastream0.ext4"
-TAR_EXT4 = "${IMGDEPLOYDIR}/polyos-image-voltastream0.tar.bz2"
-EXT4_COL = "${COLLECTOR}/polyos-image-voltastream0.ext4"
-SD_COL = "${COLLECTOR}/polyos-image-voltastream0.rootfs.sdcard"
-TAR_COL = "${COLLECTOR}/polyos-image-voltastream0.tar.bz2"
+ROOT_EXT4 = "${IMGDEPLOYDIR}/polyos-image-voltastream.ext4"
+TAR_EXT4 = "${IMGDEPLOYDIR}/polyos-image-voltastream.tar.bz2"
+EXT4_COL = "${COLLECTOR}/polyos-image-voltastream.ext4"
+SD_COL = "${COLLECTOR}/polyos-image-voltastream.rootfs.sdcard"
+TAR_COL = "${COLLECTOR}/polyos-image-voltastream.tar.bz2"
 
 generate_imx_sdcard () {
 
@@ -296,7 +296,7 @@ generate_imx_sdcard () {
 	rm -f ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.gz
 
 	# Compress EXT4 image to polyos_x.x.x.x_update.tar.gz
-	cp ${COLLECTOR}/polyos-image-voltastream0.ext4 ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
+	cp ${COLLECTOR}/polyos-image-voltastream.ext4 ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
 	tar -zcvf ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.gz \
 			${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
 
@@ -428,9 +428,9 @@ DTB_PV_VS0 = "/home/poly/dev/yocto-polyos/build/tmp/work/voltastream0-poky-linux
 DTB_PV_VSA1 = "/home/poly/dev/yocto-polyos/build/tmp/work/voltastream0-poky-linux-gnueabi/linux-imx-pv/4.1.15-r0/build/arch/arm/boot/dts/imx6ull-voltastream-amp1.dtb"
 
 my_postprocess_function() {
-   cp ${DTB_PV_VS0} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream0.dtb
-   cp ${DTB_PV_VSA1} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream-amp1.dtb
-   cp ${ZIMAGE_PV} ${IMAGE_ROOTFS}/boot/zImage
+#   cp ${DTB_PV_VS0} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream0.dtb
+#   cp ${DTB_PV_VSA1} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream-amp1.dtb
+#   cp ${ZIMAGE_PV} ${IMAGE_ROOTFS}/boot/zImage
    echo ${DISTRO_VERSION} > ${IMAGE_ROOTFS}/polyos_version
    echo " " > ${IMAGE_ROOTFS}/etc/motd
    echo "### PolyOS ${DISTRO_VERSION} ###" >> ${IMAGE_ROOTFS}/etc/motd
