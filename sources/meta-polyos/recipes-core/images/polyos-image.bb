@@ -58,7 +58,6 @@ IMAGE_INSTALL_append +=" \
 
 IMAGE_INSTALL_append +=" \
 	shairport-sync \
-	librespot \
 	gmrender-resurrect \
 	snapcast \
 	squeezelite \
@@ -94,7 +93,7 @@ IMAGE_INSTALL_append +=" \
 ### ROOT SIZE ###
 #################
 
-IMAGE_ROOTFS_SIZE = "490000" 
+IMAGE_ROOTFS_SIZE = "950000" 
 
 
 

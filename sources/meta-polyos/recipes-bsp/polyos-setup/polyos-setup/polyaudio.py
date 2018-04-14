@@ -70,7 +70,7 @@ def chooseFTS():
     print("1 -\t ANALOG  \t(ZERO)")
     print("2 -\t AMPLIFIER\t(AMP1)")
     print("")
-    user = input("Enter either 0 or 1 to configure audio output: ")
+    user = input("Enter either 0 or 1 or 2 to configure audio output: ")
     if user == "0":
         selectSPDIF()
     if user == "1":
@@ -78,4 +78,4 @@ def chooseFTS():
     if user == "2":
         selectAMP1()
     else:
-        selectSPDIF()
+        selectLINE()
