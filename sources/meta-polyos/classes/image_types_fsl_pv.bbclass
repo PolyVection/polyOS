@@ -427,11 +427,13 @@ ZIMAGE_PV = "${DEPLOY_DIR_IMAGE}/zImage"
 DTB_PV_VS0 = "${DEPLOY_DIR_IMAGE}/zImage-imx6ull-voltastream0.dtb"
 DTB_PV_VSA1 = "${DEPLOY_DIR_IMAGE}/zImage-imx6ull-voltastream-amp1.dtb"
 DTB_PV_VSM1_0006 = "${DEPLOY_DIR_IMAGE}/zImage-imx6ull-vsm1-0006.dtb"
+DTB_PV_VSM1_0007 = "${DEPLOY_DIR_IMAGE}/zImage-imx6ull-vsm1-0007.dtb"
 
 my_postprocess_function() {
    cp ${DTB_PV_VS0} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream0.dtb
    cp ${DTB_PV_VSA1} ${IMAGE_ROOTFS}/boot/imx6ull-voltastream-amp1.dtb
    cp ${DTB_PV_VSM1_0006} ${IMAGE_ROOTFS}/boot/imx6ull-vsm1-0006.dtb
+   cp ${DTB_PV_VSM1_0007} ${IMAGE_ROOTFS}/boot/imx6ull-vsm1-0007.dtb
 #   cp ${ZIMAGE_PV} ${IMAGE_ROOTFS}/boot/zImage
    echo ${DISTRO_VERSION} > ${IMAGE_ROOTFS}/polyos_version
    echo " " > ${IMAGE_ROOTFS}/etc/motd

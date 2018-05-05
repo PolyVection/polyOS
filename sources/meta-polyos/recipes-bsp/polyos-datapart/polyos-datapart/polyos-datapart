@@ -17,11 +17,11 @@ if ! [ -d "/mnt/data/settings/audio/alsa" ]; then
 	touch /mnt/data/settings/audio/alsa/asound.conf
 	echo "ctl.!default {" > /mnt/data/settings/audio/alsa/asound.conf
 	echo "type hw" >> /mnt/data/settings/audio/alsa/asound.conf
-	echo "card 1" >> /mnt/data/settings/audio/alsa/asound.conf
+	echo "card 0" >> /mnt/data/settings/audio/alsa/asound.conf
 	echo "}" >> /mnt/data/settings/audio/alsa/asound.conf
 	echo "pcm.!default {" >> /mnt/data/settings/audio/alsa/asound.conf
 	echo "type hw" >> /mnt/data/settings/audio/alsa/asound.conf
-	echo "card 1" >> /mnt/data/settings/audio/alsa/asound.conf
+	echo "card 0" >> /mnt/data/settings/audio/alsa/asound.conf
 	echo "}" >> /mnt/data/settings/audio/alsa/asound.conf
         rm -r /etc/asound.conf
 	
