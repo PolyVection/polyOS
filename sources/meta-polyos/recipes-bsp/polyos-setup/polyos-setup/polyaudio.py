@@ -69,13 +69,22 @@ def chooseFTS():
     print("0 -\t TOSLINK \t(ZERO)")
     print("1 -\t ANALOG  \t(ZERO)")
     print("2 -\t AMPLIFIER\t(AMP1)")
+    print("3 -\t DAC\t\t(M1-0006)")
+    print("4 -\t SPDIF\t\t(M1-0006 + M1-0007)")
+
     print("")
-    user = input("Enter either 0 or 1 or 2 to configure audio output: ")
-    if user == "0":
+    user = input("Enter either 0, 1, 2, 3 or 4 to configure audio output: ")
+    if "0" in user:
         selectSPDIF()
-    if user == "1":
+    elif "1" in user:
         selectLINE()
-    if user == "2":
+    elif "2" in user:
         selectAMP1()
-    else:
+    elif "3" in user:
         selectLINE()
+    elif "4" in user:
+        selectSPDIF()
+    else:
+        print("SOMETHING WENT WRONG - TRY AGAIN: ", user)
+        time.sleep(1)
+        chooseFTS()

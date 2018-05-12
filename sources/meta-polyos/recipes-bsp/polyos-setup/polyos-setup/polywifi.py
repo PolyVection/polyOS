@@ -89,7 +89,7 @@ def selectNetwork(wifi_info):
     print("-------------------------------------------------------------")
     for ssid in wifi_info[0]:
         i = i + 1
-        print(i, ":\t", polyterminal.text_colors.BLUE, ssid, polyterminal.text_colors.END, "(Signal:", wifi_info[2][i-3], "%)")
+        print(i, ":\t", polyterminal.text_colors.BLUE, ssid, polyterminal.text_colors.END)
     
     print("")
     choice = -1
@@ -109,7 +109,7 @@ def selectNetwork(wifi_info):
         if choice == 0:
             break
         elif choice == 1:
-            sys.exit(0)
+            break
         elif choice == 2:
             break
         elif choice > 2 and choice <= i and polyterminal.verified(wifi_info[0][choice-3]):
@@ -177,11 +177,11 @@ def connectFTS():
         choice = selectNetwork(scanForNetworks())
         if choice == 0:
             print ("Scanning again.")
-        if choice == 1:
+        elif choice == 1:
             return 0
-        if choice == 2:
+        elif choice == 2:
             return 0
-        if choice > 2:
+        elif choice > 2:
             break
 
 
