@@ -38,7 +38,8 @@ etc_host=`cat /etc/hostname`
 
 if [ "$etc_host" != "$setting_host" ]; then
 	echo "$setting_host" > /etc/hostname
-    echo "device_name = $setting_host" >> /etc/spotifyd.conf
+	sed -i '/^device_name/d' /etc/spotifyd.conf
+    	echo "device_name = $setting_host" >> /etc/spotifyd.conf
 	reboot  
 fi
 
