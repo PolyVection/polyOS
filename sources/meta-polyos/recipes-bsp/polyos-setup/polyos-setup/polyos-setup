@@ -84,7 +84,14 @@ def restartStreaming():
     subprocess.check_output(["systemctl", "stop", "spotifyd"], stderr=subprocess.STDOUT)
     subprocess.check_output(["systemctl", "stop", "gmediarenderer"], stderr=subprocess.STDOUT)
     subprocess.check_output(["systemctl", "stop", "squeezelite"], stderr=subprocess.STDOUT)
-    time.sleep(3)
+    time.sleep(2)                                                                                                       
+    try:                                                                                                                
+        subprocess.check_output(["alsactl", "restore"], stderr=subprocess.DEVNULL)                                      
+    except subprocess.CalledProcessError as e:                                                                          
+        output = e.output.decode()                                                                                      
+    subprocess.check_output(["/usr/bin/aplay", "/etc/wav/silence.wav"], stderr=subprocess.STDOUT)
+    print("PLEASE WAIT A FEW SECONDS...")                       
+    time.sleep(4) 
     subprocess.check_output(["systemctl", "start", "shairport-sync"], stderr=subprocess.STDOUT)
     subprocess.check_output(["systemctl", "start", "spotifyd"], stderr=subprocess.STDOUT)
     subprocess.check_output(["systemctl", "start", "gmediarenderer"], stderr=subprocess.STDOUT)

@@ -26,13 +26,18 @@ import polyterminal
 
 def selectSPDIF():
     f = open("/mnt/data/settings/audio/alsa/asound.conf", 'w')
-    f.write("ctl.!default {\n")
-    f.write("type hw\n")
-    f.write("card pcm5121\n")
+    f.write("pcm.spdifvol {\n")
+    f.write("type softvol\n")
+    f.write("slave.pcm \"plughw:imxspdif\"\n")
+    f.write("control.name \"Digital\"\n")
+    f.write("control.card imxspdif\n")
     f.write("}\n")
     f.write("pcm.!default {\n")
-    f.write("type hw\n")
-    f.write("card imxspdif\n")
+    f.write("type             plug\n")
+    f.write("slave.pcm       \"spdifvol\"\n")
+    f.write("}\n")
+    f.write("ctl.!default {\n")
+    f.write("type            hw card imxspdif\n")
     f.write("}\n")
     f.close()
 
