@@ -41,6 +41,23 @@ def selectSPDIF():
     f.write("}\n")
     f.close()
 
+def selectI2S():
+    f = open("/mnt/data/settings/audio/alsa/asound.conf", 'w')
+    f.write("pcm.spdifvol {\n")
+    f.write("type softvol\n")
+    f.write("slave.pcm \"plughw:pcm5102a\"\n")
+    f.write("control.name \"Digital\"\n")
+    f.write("control.card pcm5102a\n")
+    f.write("}\n")
+    f.write("pcm.!default {\n")
+    f.write("type             plug\n")
+    f.write("slave.pcm       \"spdifvol\"\n")
+    f.write("}\n")
+    f.write("ctl.!default {\n")
+    f.write("type            hw card pcm5102a\n")
+    f.write("}\n")
+    f.close()
+
 def selectLINE():
     f = open("/mnt/data/settings/audio/alsa/asound.conf", 'w')
     f.write("ctl.!default {\n")
@@ -76,6 +93,7 @@ def chooseFTS():
     print("2 -\t AMPLIFIER\t(AMP1)")
     print("3 -\t DAC\t\t(M1-0006)")
     print("4 -\t SPDIF\t\t(M1-0006 + M1-0007)")
+    print("5 -\t I2S\t\t(M1-0007)")
 
     print("")
     user = input("Enter either 0, 1, 2, 3 or 4 to configure audio output: ")
@@ -89,6 +107,8 @@ def chooseFTS():
         selectLINE()
     elif "4" in user:
         selectSPDIF()
+    elif "5" in user:
+        selectI2S()
     else:
         print("SOMETHING WENT WRONG - TRY AGAIN: ", user)
         time.sleep(1)
