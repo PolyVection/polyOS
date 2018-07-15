@@ -25,6 +25,6 @@ FILES_${PN} += "${sbindir}/polyos-setup"
 FILES_${PN} += "${sbindir}/polywifi.py"
 FILES_${PN} += "${sbindir}/polyaudio.py"
 FILES_${PN} += "${sbindir}/polyterminal.py"
-RDEPENDS_${PN} = "python3 python3-argparse python3-fcntl python3-subprocess python3-signal python3-argparse python3-json python3-re python3-pygobject python3-dbus"
+RDEPENDS_${PN} = "python3 python3-fcntl python3-json python3-pygobject python3-dbus"
 
 
