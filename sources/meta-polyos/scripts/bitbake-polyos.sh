@@ -123,7 +123,7 @@ fi
 bitbake $target --continue 2>&1 | tee bitbake.log
 build_exit_code=${PIPESTATUS[0]}
 
-if [ $build_exit_code -eq 0 ]; then
+if [ $build_exit_code -eq 1 ]; then
     polyos_version=grep "DISTRO_VERSION =" ${build_bundle_dir}/sources/meta-polyvection/conf/distro/polyos.conf | awk '{print $3}' | sed s/\"//g
     mkdir ${build_bundle_dir}/release
     mkdir ${build_bundle_dir}/release/polyos_version-(build ${$BUILD_NUMBER})
