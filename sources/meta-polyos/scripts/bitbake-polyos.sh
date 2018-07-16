@@ -114,59 +114,20 @@ build_workspace_dir=$(readlink -f $build_workspace_dir)
 
 source $init_build_env $build_workspace_dir
 
-find $build_workspace_dir/tmp/deploy/images -name 'core-image*' -delete 2>/dev/null
-find $build_workspace_dir/tmp/deploy/images -name 'sim*.tgz' -delete 2>/dev/null
-
 if [ -e FAILED_SYSROOT ]; then
     echo "Purging tmp/ directory due to previous failure in this workspace"
     rm -rf tmp
     rm -f FAILED_SYSROOT
 fi
 
-bitbake $EXTRA_BITBAKE_FLAGS $target 2>&1 | tee bitbake.log
+bitbake $target --continue 2>&1 | tee bitbake.log
 build_exit_code=${PIPESTATUS[0]}
 
-if grep -q "is trying to install files into a shared area when those files already exist" bitbake.log; then
-    # If we got warning from overwriting a file in sysroot, we want that
-    # to be a hard failure.
-    echo "ERROR: build overwrote existing files in sysroot"
-    touch FAILED_SYSROOT
-    build_exit_code=1
-fi
-
 if [ $build_exit_code -eq 0 ]; then
-    if [ "$cleanup_after" -ne 0 ]; then
-	    echo "Cleaning workdirs..."
-	    cleanup-workdir
-    fi
-fi
-
-if [ -n "$sstate_install_dir" ]
-then
-    echo "Copying shared state to ${sstate_install_dir}."
-    #---------------------------------------------------------------------------
-    # Starting with Yocto 1.3, sstate-cache contains directories named after the
-    # first two letters of the hash.  Furthermore, native packages are put into
-    # OS-named directories before being put into such hash-named directories.
-    # We want to preserve this structure to improve the performance of our cache
-    # and avoid any limits on the number of files in a directory.  (No modern FS
-    # has such limits, but if we use NFS on our filers, such a limit does
-    # exist.)
-    #
-    # Because of this, we must cd into the sstate-cache before running the find
-    # command.  Otherwise, the find would try to create a directory called
-    # 'sstate-cache' on the mirror, which is something we don't want.
-    #---------------------------------------------------------------------------
-
-    if [ -d sstate-cache ]; then
-	cd sstate-cache
-
-	find . -type d -exec chmod g+ws \{} \;
-	rsync --ignore-existing -prL . ${sstate_install_dir}
-	cd ..
-	rm sstate-cache -rf
-	echo "Finished copying shared state to ${sstate_install_dir}."
-    fi
+    polyos_version=grep "DISTRO_VERSION =" ${build_bundle_dir}/sources/meta-polyvection/conf/distro/polyos.conf | awk '{print $3}' | sed s/\"//g
+    mkdir ${build_bundle_dir}/release
+    mkdir ${build_bundle_dir}/release/polyos_version-(build ${$BUILD_NUMBER})
+    cp $build_workspace_dir/tmp/deploy/images/voltastream/_PolyOS_release/polyos_version/* ${build_bundle_dir}/release/polyos_version-(build ${$BUILD_NUMBER})
 fi
 
 #---------------------------------------------------------------------------
@@ -177,39 +138,5 @@ cd ${build_bundle_dir}
 cp .gitmodules layer-info.log
 git submodule status >> layer-info.log
 git log -1 --pretty=oneline | awk '{print $1}' > bundle-rev.log
-
-if [ $build_exit_code -ne 0 ]
-then
-    fail_dirs="buildstats pkgdata sstate-control stamps"
-    if [ -n "$CAPTURE_FAILING_SYSROOTS" ]; then
-	    fail_dirs="$fail_dirs sysroots"
-    fi
-    if [ -n "$CAPTURE_ALL_WORKDIRS" ]; then
-	    fail_dirs="$fail_dirs work"
-    else
-	    failed_recipes=$(mktemp)
-	    gawk '/ERROR: Logfile of failure/{print $7}' ${build_workspace_dir}/bitbake.log > $failed_recipes
-	    while read logfile; do
-		    workdir=$(dirname $(dirname $logfile))
-		    workdir=$(echo $workdir | sed "s|$build_workspace_dir/tmp/||")
-		    fail_dirs="$fail_dirs $workdir"
-	    done < $failed_recipes
-	    rm $failed_recipes
-    fi
-
-    for d in $fail_dirs; do
-	    mkdir -p ${build_workspace_dir}/tmp/$d
-    done
-    tar -czf ${build_workspace_dir}/fail.tgz -C ${build_workspace_dir}/tmp $fail_dirs
-    tar_exit_code="$?"
-
-    if [ $tar_exit_code -ne 0 ]; then
-	    echo "ERROR: tar failed"
-	    rm ${build_workspace_dir}/fail.tgz
-    fi
-else
-    # Get rid of downloads to save space
-    rm downloads -rf
-fi
 
 exit $build_exit_code
