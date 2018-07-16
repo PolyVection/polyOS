@@ -130,6 +130,7 @@ if [ $build_exit_code -eq 0 ]; then
     polyos_version=$(grep 'DISTRO_VERSION =' ${build_bundle_dir}/sources/meta-polyos/conf/distro/polyos.conf | awk '{print $3}' | sed s/\"//g)
     mkdir -p "${build_bundle_dir}/release"
     mkdir -p "${build_bundle_dir}/release/${polyos_version}-(#${build_number})"
+    ls "${build_workspace_dir}/tmp/deploy/images/voltastream/_PolyOS_release/${polyos_version}"
     cp -rf "${build_workspace_dir}/tmp/deploy/images/voltastream/_PolyOS_release/${polyos_version}/*" "${build_bundle_dir}/release/${polyos_version}-(#${build_number})"
 fi
 
