@@ -131,6 +131,4 @@ echo "Entire build output:"
 echo
 cat $LOGFILE
 
-mv $WORKSPACE/*.log "$ARTIFACTS"
-
 exit $build_status
