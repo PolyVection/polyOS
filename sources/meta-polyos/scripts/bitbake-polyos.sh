@@ -52,8 +52,9 @@ EOF
 build_bundle_dir=""
 sstate_install_dir=""
 cleanup_after=0
+build_number=""
 
-while getopts ':t:d:w:l:a:i:o:f:srhcv' opt
+while getopts ':t:d:w:l:a:i:n:o:f:srhcv' opt
 do
   case $opt in
       t) target="$OPTARG";;
@@ -61,6 +62,7 @@ do
       w) build_workspace_dir="$OPTARG";;
       a) head_pkgs="-a $OPTARG";;
       i) sstate_install_dir="$OPTARG";;
+      n) build_number="$OPTARG";;
       c) cleanup_after=1;;
       h) usage;;
       *) echo "WARN: '-${OPTARG}' isn't a valid option; I'm ignoring it.";;
@@ -124,12 +126,11 @@ bitbake $EXTRA_BITBAKE_FLAGS $target 2>&1 | tee bitbake.log
 build_exit_code=${PIPESTATUS[0]}
 echo "bitbake-polyos EXIT CODE = $build_exit_code"
 
-
 if [ $build_exit_code -eq 0 ]; then
-    polyos_version=grep "DISTRO_VERSION =" ${build_bundle_dir}/sources/meta-polyvection/conf/distro/polyos.conf | awk '{print $3}' | sed s/\"//g
-    mkdir ${build_bundle_dir}/release
-    mkdir ${build_bundle_dir}/release/$polyos_version-(build ${$BUILD_NUMBER})
-    cp $build_workspace_dir/tmp/deploy/images/voltastream/_PolyOS_release/polyos_version/* ${build_bundle_dir}/release/polyos_version-(build ${$BUILD_NUMBER})
+    polyos_version=$(grep 'DISTRO_VERSION =' ${build_bundle_dir}/sources/meta-polyos/conf/distro/polyos.conf | awk '{print $3}' | sed s/\"//g)
+    mkdir -p "${build_bundle_dir}/release"
+    mkdir -p "${build_bundle_dir}/release/${polyos_version}-(#${build_number})"
+    cp "${build_workspace_dir}/tmp/deploy/images/voltastream/_PolyOS_release/${polyos_version}/*" "${build_bundle_dir}/release/${polyos_version}-(#${build_number})"
 fi
 
 #---------------------------------------------------------------------------

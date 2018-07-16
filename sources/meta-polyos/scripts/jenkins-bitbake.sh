@@ -105,7 +105,7 @@ if [ -d poky/build ]; then
 	echo "NOTE: reused existing workspace!"
 fi
 
-${WORKSPACE}/sources/meta-polyos/scripts/bitbake-polyos.sh -c -t "$TARGET" -i $sstate_dir $autorev > $LOGFILE &
+${WORKSPACE}/sources/meta-polyos/scripts/bitbake-polyos.sh -n "$BUILD_NUMBER" -c -t "$TARGET" -i $sstate_dir $autorev > $LOGFILE &
 
 # Certain versions of Jenkins get mad if you output too much to the
 # console, with the symptom that your SSH slave gets randomly
