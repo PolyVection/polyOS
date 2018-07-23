@@ -64,6 +64,7 @@ IMAGE_INSTALL_append +=" \
 	mpd \
 	mpc \
     spotifyd \
+    slimserver \
 	"
 
 
