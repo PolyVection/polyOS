@@ -76,8 +76,12 @@ IMAGE_INSTALL_append +=" \
     rsync \
     git \
     patch \
+    bash \
+    zlib \
+    packegroup-core-buildessential \
+    test \
 "
-
+IMAGE_FEATURES += "staticdev-pkgs"
 
 ##############
 ### SYSTEM ###
