@@ -88,6 +88,7 @@ IMAGE_INSTALL_append +=" \
 	nodejs \
 	nodejs-npm \
 	polyos-restapi \
+    perl \
 	"
 
 #################
