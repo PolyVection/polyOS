@@ -4,7 +4,8 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690"
 
 DEPENDS = "alsa-lib avahi libvorbis flac alsa-utils lame faad2 sox perl"
-RDEPENDS_${PN} = "avahi libvorbis flac lame faad2 sox perl"
+RDEPENDS_${PN} = "perl"
+#libvorbis flac lame faad2 sox 
 PROVIDES += "slimserver"
 
 SRC_URI =     "git://github.com/Logitech/slimserver.git;protocol=https;branch=public/7.9"
