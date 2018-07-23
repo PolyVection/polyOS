@@ -72,7 +72,6 @@ IMAGE_INSTALL_append +=" \
 #####################
 
 IMAGE_INSTALL_append +=" \
-    libmodule-build-perl \
     nasm \
     rsync \
     git \
