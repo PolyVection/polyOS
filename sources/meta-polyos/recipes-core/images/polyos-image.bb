@@ -79,7 +79,6 @@ IMAGE_INSTALL_append +=" \
     bash \
     zlib \
     packagegroup-core-buildessential \
-    test \
 "
 IMAGE_FEATURES += "staticdev-pkgs"
 
