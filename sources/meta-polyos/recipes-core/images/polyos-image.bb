@@ -79,6 +79,7 @@ IMAGE_INSTALL_append +=" \
     bash \
     zlib \
     packagegroup-core-buildessential \
+    perl-doc \
 "
 IMAGE_FEATURES += "staticdev-pkgs"
 
