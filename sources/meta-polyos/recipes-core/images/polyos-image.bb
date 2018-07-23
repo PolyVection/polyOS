@@ -67,6 +67,18 @@ IMAGE_INSTALL_append +=" \
     slimserver \
 	"
 
+#####################
+### BUILDING CPAN ###
+#####################
+
+IMAGE_INSTALL_append +=" \
+    libmodule-build-perl \
+    nasm \
+    rsync \
+    git \
+    patch \
+"
+
 
 ##############
 ### SYSTEM ###
