@@ -10,3 +10,6 @@
 [submodule "sources/meta-rust"]
 	path = sources/meta-rust
 	url = https://github.com/meta-rust/meta-rust.git
+[submodule "sources/meta-cpan"]
+	path = sources/meta-cpan
+	url = https://github.com/rehsack/meta-cpan.git
