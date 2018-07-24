@@ -3,12 +3,18 @@ SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
+
 DEPENDS = "alsa-lib avahi libvorbis flac alsa-utils lame faad2 sox perl"
 RDEPENDS_${PN} = "perl"
 #libvorbis flac lame faad2 sox 
 PROVIDES += "slimserver"
 
-SRC_URI =     "git://github.com/Logitech/slimserver.git;protocol=https;branch=public/7.9"
+SRC_URI =   "\
+            git://github.com/Logitech/slimserver.git;protocol=https;branch=public/7.9 \
+            file://CPAN/* \
+            "
+
 SRCREV = "${AUTOREV}"
 
 #INSANE_SKIP_${PN} = "ldflags"
@@ -17,6 +23,11 @@ TARGET_CC_ARCH += "${LDFLAGS}"
 do_package_qa[noexec] = "1"
 
 S = "${WORKDIR}/git"
+
+inherit useradd
+USERADD_PACKAGES = "${PN} ${PN}-squeezeboxserver"
+USERADD_PARAM_${PN} = "-d /home/squeezeboxserver -r -s /bin/bash squeezeboxserver"
+GROUPADD_PARAM_${PN}-squeezeboxserver = "nogroup"
 
 do_install () {
 
@@ -35,6 +46,7 @@ do_install () {
     rm -rf ${S}/CPAN/arch/5.24/aarch64-linux-thread-multi
     rm -rf ${S}/CPAN/arch/5.24/i386-linux-thread-multi-64int
     rm -rf ${S}/CPAN/arch/5.24/x86_64-linux-thread-multi
+    rm -rf ${S}/CPAN/arch/5.24/arm-linux-gnueabihf-thread-multi-64int
     rm -rf ${S}/Bin/MSWin32-x86-multi-thread
     rm -rf ${S}/Bin/aarch64-linux
     rm -rf ${S}/Bin/arm-linux
@@ -55,6 +67,8 @@ do_install () {
 
     install -d ${D}${bindir}/slimserver
     cp -r ${S}/* ${D}${bindir}/slimserver/
+    cp -r ${WORKDIR}/CPAN/* ${D}${bindir}/slimserver/CPAN/
+    chown -R squeezeboxserver ${D}${bindir}/slimserver
 
 }
 

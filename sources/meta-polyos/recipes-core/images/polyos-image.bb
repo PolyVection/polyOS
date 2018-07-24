@@ -71,17 +71,17 @@ IMAGE_INSTALL_append +=" \
 ### BUILDING CPAN ###
 #####################
 
-IMAGE_INSTALL_append +=" \
-    nasm \
-    rsync \
-    git \
-    patch \
-    bash \
-    zlib \
-    packagegroup-core-buildessential \
-    perl-doc \
-"
-IMAGE_FEATURES += "staticdev-pkgs"
+#IMAGE_INSTALL_append +=" \
+#    nasm \
+#    rsync \
+#    git \
+#    patch \
+#    bash \
+#    zlib \
+#    packagegroup-core-buildessential \
+#    perl-doc \
+#"
+#IMAGE_FEATURES += "staticdev-pkgs"
 
 ##############
 ### SYSTEM ###
@@ -105,6 +105,9 @@ IMAGE_INSTALL_append +=" \
 	polyos-restapi \
     perl \
     perl-modules \
+    parted \
+    e2fsprogs-resize2fs \
+    io-socket-ssl-perl \
 	"
 
 #################
