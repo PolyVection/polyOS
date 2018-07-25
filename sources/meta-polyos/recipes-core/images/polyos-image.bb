@@ -29,13 +29,10 @@ IMAGE_INSTALL_append +=" \
 	wireless-firmware-mt \
 	wireless-firmware-qcom \
 	curl \
-	hostapd-rtl \
-	dhcp-server \
 	systemd-network \
 	systemd-wlan0 \
 	connman \
 	connman-client \
-	bluez5 \
 	"
 
 
@@ -58,11 +55,7 @@ IMAGE_INSTALL_append +=" \
 
 IMAGE_INSTALL_append +=" \
 	shairport-sync \
-	gmrender-resurrect \
-	snapcast \
 	squeezelite \
-	mpd \
-	mpc \
     spotifyd \
     slimserver \
 	"
@@ -114,7 +107,7 @@ IMAGE_INSTALL_append +=" \
 ### ROOT SIZE ###
 #################
 
-IMAGE_ROOTFS_SIZE = "950000" 
+#IMAGE_ROOTFS_SIZE = "950000" 
 
 
 
