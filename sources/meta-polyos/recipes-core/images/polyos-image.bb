@@ -15,7 +15,6 @@ IMAGE_INSTALL += " \
 IMAGE_FEATURES += " ssh-server-openssh"
 
 
-
 ###############
 ### NETWORK ###
 ###############
@@ -100,6 +99,7 @@ IMAGE_INSTALL_append +=" \
     perl-modules \
     parted \
     e2fsprogs-resize2fs \
+    e2fsprogs-mke2fs \
     io-socket-ssl-perl \
 	"
 
@@ -107,7 +107,9 @@ IMAGE_INSTALL_append +=" \
 ### ROOT SIZE ###
 #################
 
-#IMAGE_ROOTFS_SIZE = "950000" 
+#IMAGE_ROOTFS_SIZE = "950000"
+#IMAGE_ROOTFS_EXTRA_SPACE = "100"
+IMAGE_OVERHEAD_FACTOR = "1.01"
 
 
 

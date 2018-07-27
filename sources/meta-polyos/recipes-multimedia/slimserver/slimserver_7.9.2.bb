@@ -26,7 +26,7 @@ S = "${WORKDIR}/git"
 
 inherit useradd
 USERADD_PACKAGES = "${PN} ${PN}-squeezeboxserver"
-USERADD_PARAM_${PN} = "-d /home/squeezeboxserver -r -s /bin/bash squeezeboxserver"
+USERADD_PARAM_${PN} = "-d /usr/bin/slimserver/ -r -s /bin/bash squeezeboxserver"
 GROUPADD_PARAM_${PN}-squeezeboxserver = "nogroup"
 
 do_install () {
@@ -68,7 +68,7 @@ do_install () {
     install -d ${D}${bindir}/slimserver
     cp -r ${S}/* ${D}${bindir}/slimserver/
     cp -r ${WORKDIR}/CPAN/* ${D}${bindir}/slimserver/CPAN/
-    chown -R squeezeboxserver ${D}${bindir}/slimserver
+    chown squeezeboxserver:nogroup ${D}${bindir}/slimserver/ -R
 
 }
 

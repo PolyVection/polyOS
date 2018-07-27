@@ -82,7 +82,6 @@ def firstTimeSetup():
 def restartStreaming():
     subprocess.check_output(["systemctl", "stop", "shairport-sync"], stderr=subprocess.STDOUT)
     subprocess.check_output(["systemctl", "stop", "spotifyd"], stderr=subprocess.STDOUT)
-    subprocess.check_output(["systemctl", "stop", "gmediarenderer"], stderr=subprocess.STDOUT)
     subprocess.check_output(["systemctl", "stop", "squeezelite"], stderr=subprocess.STDOUT)
     time.sleep(2)                                                                                                       
     try:                                                                                                                
@@ -94,7 +93,6 @@ def restartStreaming():
     time.sleep(4) 
     subprocess.check_output(["systemctl", "start", "shairport-sync"], stderr=subprocess.STDOUT)
     subprocess.check_output(["systemctl", "start", "spotifyd"], stderr=subprocess.STDOUT)
-    subprocess.check_output(["systemctl", "start", "gmediarenderer"], stderr=subprocess.STDOUT)
     subprocess.check_output(["systemctl", "start", "squeezelite"], stderr=subprocess.STDOUT)
 
 

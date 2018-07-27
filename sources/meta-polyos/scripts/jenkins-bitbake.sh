@@ -131,4 +131,5 @@ echo "Entire build output:"
 echo
 cat $LOGFILE
 echo "jenkins-bitbake EXIT CODE = $build_status"
+
 exit $build_status

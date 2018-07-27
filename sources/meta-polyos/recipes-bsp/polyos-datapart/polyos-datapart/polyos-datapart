@@ -6,6 +6,48 @@ TYPE_HEX=`cat /sys/fsl_otp/HW_OCOTP_GP2`
 POLYOS_SERVICE="/etc/avahi/services/polyos.service"
 POLYOS_VERSION=`cat /polyos_version`
 
+if [ ! -b "/dev/mmcblk1p3" ]; then
+
+cat << EOF | fdisk /dev/mmcblk1
+o
+n
+p
+1
+24576
++1500M
+n
+n
+p
+2
+3096580
++1500M
+n
+p
+3
+6168580
+
+w
+q
+EOF
+sleep 3
+rm -rf /mnt/data
+reboot
+exit 0
+fi
+
+if [ ! -d "/mnt/data" ]; then
+
+    resize2fs -p /dev/mmcblk1p1
+    mkfs.ext4 -F /dev/mmcblk1p2
+    mkfs.ext4 -F /dev/mmcblk1p3
+    sleep 2
+    echo "/dev/mmcblk1p3       /mnt/data          ext4       defaults  0  0" >> /etc/fstab
+    mkdir -p /mnt/data
+    sleep 2
+    reboot
+    exit 0
+fi
+
 if ! [ -d "/mnt/data/settings/wireless/connman" ]; then
 
         mkdir -p /mnt/data/settings/wireless/connman
@@ -40,7 +82,8 @@ if [ "$etc_host" != "$setting_host" ]; then
 	echo "$setting_host" > /etc/hostname
 	sed -i '/^device_name/d' /etc/spotifyd.conf
     	echo "device_name = $setting_host" >> /etc/spotifyd.conf
-	reboot  
+	reboot
+    exit 0
 fi
 
 
@@ -56,7 +99,7 @@ if [ ! -f "$POLYOS_SERVICE" ]; then
         echo '<port>8080</port>' >> $POLYOS_SERVICE                             
         echo '<txt-record>type='$TYPE_HEX'</txt-record>' >> $POLYOS_SERVICE     
         echo '<txt-record>serial='$SERIAL_DEC'</txt-record>' >> $POLYOS_SERVICE
-	echo '<txt-record>os='$POLYOS_VERSION'</txt-record>' >> $POLYOS_SERVICE
+        echo '<txt-record>os='$POLYOS_VERSION'</txt-record>' >> $POLYOS_SERVICE
         echo '</service>' >> $POLYOS_SERVICE                                    
         echo '</service-group>' >> $POLYOS_SERVICE                              
                                                                                 

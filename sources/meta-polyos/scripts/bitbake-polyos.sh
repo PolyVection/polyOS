@@ -145,4 +145,6 @@ cp .gitmodules layer-info.log
 git submodule status >> layer-info.log
 git log -1 --pretty=oneline | awk '{print $1}' > bundle-rev.log
 
+rm -rf ${build_bundle_dir}/build/tmp
+
 exit $build_exit_code
