@@ -86,10 +86,10 @@ COLLECTOR = "${DEPLOY_DIR_IMAGE}/_COLLECTOR"
 UBOOT_DIR_POLY = "${DEPLOY_DIR_IMAGE}/u-boot-voltastream.imx"
 
 ROOT_EXT4 = "${IMGDEPLOYDIR}/polyos-image-voltastream.ext4"
-TAR_EXT4 = "${IMGDEPLOYDIR}/polyos-image-voltastream.tar.bz2"
+TAR_ROOTFS = "${IMGDEPLOYDIR}/polyos-image-voltastream.tar.bz2"
 EXT4_COL = "${COLLECTOR}/polyos-image-voltastream.ext4"
 SD_COL = "${COLLECTOR}/polyos-image-voltastream.rootfs.sdcard"
-TAR_COL = "${COLLECTOR}/polyos-image-voltastream.tar.bz2"
+TAR_ROOTFS_COL = "${COLLECTOR}/polyos-image-voltastream.tar.bz2"
 
 
 
@@ -97,7 +97,7 @@ generate_imx_sdcard () {
 
 	cp ${UBOOT_DIR_POLY} ${COLLECTOR}
 	cp ${ROOT_EXT4} ${COLLECTOR}
-	cp ${TAR_EXT4} ${COLLECTOR}
+	cp ${TAR_ROOTFS} ${COLLECTOR}
 
 	# Create partition table
 	parted -s ${SD_COL} mklabel msdos
@@ -143,18 +143,25 @@ generate_imx_sdcard () {
 
 
 	# Remove old tar
-	rm -f ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.gz
+	rm -f ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.bz2
+
+    rm -rf ${COLLECTOR}/tmp
+    mkdir ${COLLECTOR}/tmp
+    tar -xjf ${TAR_ROOTFS_COL} -C ${COLLECTOR}/tmp
+    tar cvzf ${COLLECTOR}/tmp.tar.gz -C ${COLLECTOR}/tmp .
+    mv ${COLLECTOR}/tmp.tar.gz ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.gz
 
 	# Compress EXT4 image to polyos_x.x.x.x_update.tar.gz
-	cp ${COLLECTOR}/polyos-image-voltastream.ext4 ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
-	tar -zcvf ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.gz \
-			${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
+    #cp ${COLLECTOR}/polyos-image-voltastream.ext4 ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
+    #tar -zcvf ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.gz \
+    #		${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
+
 
 	# Remove Temp copy of ext4
-	rm -f ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
+    #rm -f ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.ext4
 
 	# Generate sha256 for polyos_x.x.x.x_update.tar.gz
-	DL_SUM=`sha256sum ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.gz | cut -d " " -f1`
+	DL_SUM=`sha256sum ${POLYOS_VER_REL}/polyos_${DISTRO_VERSION}_update.tar.bz2 | cut -d " " -f1`
 	
 	# Write sha256 for polyos_x.x.x.x_update.tar.gz to polyos_x.x.x.x_update.sha256
 	echo ${DL_SUM} > ${POLYOS_VER}/polyos_${DISTRO_VERSION}_update.sha256
@@ -252,6 +259,7 @@ my_postprocess_function() {
     mv ${IMAGE_ROOTFS}/etc/shadow.new ${IMAGE_ROOTFS}/etc/shadow ;
     #openssl passwd -1 -salt $(openssl rand -base64 6) polyvection
 
+    cp ${UBOOT_DIR_POLY} ${IMAGE_ROOTFS}/boot/u-boot-dtb.imx
 }
 
 

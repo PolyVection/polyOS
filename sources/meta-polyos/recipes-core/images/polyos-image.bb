@@ -85,7 +85,6 @@ IMAGE_INSTALL_append +=" \
 	usbutils \
 	i2c-tools \
 	polyos-updater \
-	u-boot-fw-utils-pv \
 	systemd-serialgetty \
 	polyos-opensnd \
 	udev \

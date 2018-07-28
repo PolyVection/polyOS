@@ -1,14 +1,13 @@
 [Unit]
 Description=Slimserver
-After=sound.target
-Requires=avahi-daemon.service
-After=avahi-daemon.service
-Wants=network-online.target
-After=network.target network-online.target
+Requires=network.target sound.target
+After=network.target sound.target
 
 [Service]
+Type=simple
+Restart=always
 User=squeezeboxserver
-ExecStart=/usr/bin/slimserver/slimserver.pl
+ExecStart=/usr/bin/perl /usr/bin/slimserver/slimserver.pl
 
 [Install]
 WantedBy=multi-user.target

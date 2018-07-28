@@ -48,6 +48,14 @@ if [ ! -d "/mnt/data" ]; then
     exit 0
 fi
 
+if grep -qs grep -qs '/mnt/data ' /proc/mounts; then
+    echo "It's mounted."
+else
+    rm -rf /mnt/data
+    mkdir -p /mnt/data
+    mount /dev/mmcblk1p3 /mnt/data
+fi
+
 if ! [ -d "/mnt/data/settings/wireless/connman" ]; then
 
         mkdir -p /mnt/data/settings/wireless/connman
@@ -67,6 +75,41 @@ if ! [ -d "/mnt/data/settings/audio/alsa" ]; then
 	echo "}" >> /mnt/data/settings/audio/alsa/asound.conf
         rm -r /etc/asound.conf
 	
+fi
+
+if ! [ -d "/mnt/data/appcache/slimserver" ]; then
+
+    mkdir -p /mnt/data/appcache/slimserver/Cache
+    mkdir -p /mnt/data/appcache/slimserver/prefs
+    mkdir -p /mnt/data/appcache/slimserver/Logs
+    rm -rf /usr/bin/slimserver/Cache
+    rm -rf /usr/bin/slimserver/prefs
+    rm -rf /usr/bin/slimserver/Logs
+    ln -s -f /mnt/data/appcache/slimserver/Cache /usr/bin/slimserver/Cache
+    ln -s -f /mnt/data/appcache/slimserver/prefs /usr/bin/slimserver/prefs
+    ln -s -f /mnt/data/appcache/slimserver/Logs /usr/bin/slimserver/Logs
+    chown -R squeezeboxserver /mnt/data/appcache/slimserver
+    chgrp -R nogroup /mnt/data/appcache/slimserver
+    chown -h squeezeboxserver:nogroup /usr/bin/slimserver/prefs
+    chown -h squeezeboxserver:nogroup /usr/bin/slimserver/Cache
+    chown -h squeezeboxserver:nogroup /usr/bin/slimserver/Logs
+
+fi
+
+if ! [ -L "/usr/bin/slimserver/Cache" ]; then
+
+    rm -rf /usr/bin/slimserver/Cache
+    rm -rf /usr/bin/slimserver/prefs
+    rm -rf /usr/bin/slimserver/Logs
+    ln -s -f /mnt/data/appcache/slimserver/Cache /usr/bin/slimserver/Cache
+    ln -s -f /mnt/data/appcache/slimserver/prefs /usr/bin/slimserver/prefs
+    ln -s -f /mnt/data/appcache/slimserver/Logs /usr/bin/slimserver/Logs
+    chown -R squeezeboxserver /mnt/data/appcache/slimserver
+    chgrp -R nogroup /mnt/data/appcache/slimserver
+    chown -h squeezeboxserver:nogroup /usr/bin/slimserver/prefs
+    chown -h squeezeboxserver:nogroup /usr/bin/slimserver/Cache
+    chown -h squeezeboxserver:nogroup /usr/bin/slimserver/Logs
+
 fi
 
 if ! [ -d "/mnt/data/settings/system" ]; then
