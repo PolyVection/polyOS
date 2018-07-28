@@ -7,12 +7,12 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
 
 DEPENDS = "alsa-lib avahi libvorbis flac alsa-utils lame faad2 sox perl"
 RDEPENDS_${PN} = "perl"
-#libvorbis flac lame faad2 sox 
 PROVIDES += "slimserver"
 
 SRC_URI =   "\
             git://github.com/Logitech/slimserver.git;protocol=https;branch=public/7.9 \
             file://CPAN/* \
+            file://slimserver.service \
             "
 
 SRCREV = "${AUTOREV}"
@@ -24,10 +24,13 @@ do_package_qa[noexec] = "1"
 
 S = "${WORKDIR}/git"
 
-inherit useradd
-USERADD_PACKAGES = "${PN} ${PN}-squeezeboxserver"
-USERADD_PARAM_${PN} = "-d /usr/bin/slimserver/ -r -s /bin/bash squeezeboxserver"
-GROUPADD_PARAM_${PN}-squeezeboxserver = "nogroup"
+# EXCLUDE_FROM_WORLD = "1"
+
+inherit useradd systemd
+
+USERADD_PACKAGES = "${PN} "
+USERADD_PARAM_${PN} = "-u 1202 -d /usr/bin/slimserver -r -s /bin/bash -P 'squeezeboxserver' squeezeboxserver"
+GROUPADD_PARAM_${PN} = "-g 900 nogroup"
 
 do_install () {
 
@@ -68,9 +71,19 @@ do_install () {
     install -d ${D}${bindir}/slimserver
     cp -r ${S}/* ${D}${bindir}/slimserver/
     cp -r ${WORKDIR}/CPAN/* ${D}${bindir}/slimserver/CPAN/
-    chown squeezeboxserver:nogroup ${D}${bindir}/slimserver/ -R
+
+    chown -R squeezeboxserver ${D}${bindir}/slimserver/
+    chgrp -R nogroup ${D}${bindir}/slimserver/
 
 }
 
-FILES_${PN} += "${bindir}/slimserver/*"
+do_install_append() {
 
+    install -d ${D}${systemd_system_unitdir}
+    install -m 0644 ${WORKDIR}/slimserver.service ${D}${systemd_system_unitdir}
+}
+
+SYSTEMD_SERVICE_${PN} = "slimserver.service"
+
+FILES_${PN} += "${bindir}/slimserver/*"
+FILES_${PN} += "${systemd_system_unitdir}/slimserver.service"
