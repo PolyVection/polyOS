@@ -29,7 +29,7 @@ p
 w
 q
 EOF
-sleep 3
+sleep 1
 rm -rf /mnt/data
 reboot
 exit 0
@@ -40,10 +40,10 @@ if [ ! -d "/mnt/data" ]; then
     resize2fs -p /dev/mmcblk1p1
     mkfs.ext4 -F /dev/mmcblk1p2
     mkfs.ext4 -F /dev/mmcblk1p3
-    sleep 2
+    sleep 1
     echo "/dev/mmcblk1p3       /mnt/data          ext4       defaults  0  0" >> /etc/fstab
     mkdir -p /mnt/data
-    sleep 2
+    sleep 1
     reboot
     exit 0
 fi
@@ -51,7 +51,6 @@ fi
 if grep -qs grep -qs '/mnt/data ' /proc/mounts; then
     echo "It's mounted."
 else
-    rm -rf /mnt/data
     mkdir -p /mnt/data
     mount /dev/mmcblk1p3 /mnt/data
 fi
