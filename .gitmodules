@@ -13,3 +13,6 @@
 [submodule "sources/meta-cpan"]
 	path = sources/meta-cpan
 	url = https://github.com/rehsack/meta-cpan.git
+[submodule "sources/meta-sunix"]
+	path = sources/meta-sunix
+	url = https://github.com/linux-sunxi/meta-sunxi.git

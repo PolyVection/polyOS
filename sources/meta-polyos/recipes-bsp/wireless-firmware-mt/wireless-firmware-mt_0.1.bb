@@ -23,4 +23,4 @@ FILES_${PN} = " \
     "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-COMPATIBLE_MACHINE = "(mx6|mx6ul|mx7)"
+COMPATIBLE_MACHINE = "(mx6|mx6ul|mx7|voltastream-a64)"

@@ -6,28 +6,27 @@ TYPE_HEX=`cat /sys/fsl_otp/HW_OCOTP_GP2`
 POLYOS_SERVICE="/etc/avahi/services/polyos.service"
 POLYOS_VERSION=`cat /polyos_version`
 
-if [ ! -b "/dev/mmcblk1p3" ]; then
+if [ ! -b "/dev/mmcblk0p3" ]; then
 
-cat << EOF | fdisk /dev/mmcblk1
-o
+cat << EOF | fdisk /dev/mmcblk0
+d
 n
 p
 1
-24576
+86016
 +1500M
 n
 n
 p
 2
-3096580
+3158016
 +1500M
 n
 p
 3
-6168580
+6230016
 
 w
-q
 EOF
 sleep 1
 rm -rf /mnt/data
@@ -37,11 +36,11 @@ fi
 
 if [ ! -d "/mnt/data" ]; then
 
-    resize2fs -p /dev/mmcblk1p1
-    mkfs.ext4 -F /dev/mmcblk1p2
-    mkfs.ext4 -F /dev/mmcblk1p3
+    resize2fs -p /dev/mmcblk0p1
+    mkfs.ext4 -F /dev/mmcblk0p2
+    mkfs.ext4 -F /dev/mmcblk0p3
     sleep 1
-    echo "/dev/mmcblk1p3       /mnt/data          ext4       defaults  0  0" >> /etc/fstab
+    echo "/dev/mmcblk0p3       /mnt/data          ext4       defaults  0  0" >> /etc/fstab
     mkdir -p /mnt/data
     sleep 1
     reboot
@@ -52,7 +51,7 @@ if grep -qs grep -qs '/mnt/data ' /proc/mounts; then
     echo "It's mounted."
 else
     mkdir -p /mnt/data
-    mount /dev/mmcblk1p3 /mnt/data
+    mount /dev/mmcblk0p3 /mnt/data
 fi
 
 if ! [ -d "/mnt/data/settings/wireless/connman" ]; then

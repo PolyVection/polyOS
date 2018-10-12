@@ -46,12 +46,12 @@ do_install () {
     rm -rf ${S}/CPAN/arch/5.22
     rm -rf ${S}/CPAN/arch/5.26
     rm -rf ${S}/CPAN/arch/5.8
-    rm -rf ${S}/CPAN/arch/5.24/aarch64-linux-thread-multi
+    mv ${S}/CPAN/arch/5.24/aarch64-linux-thread-multi ${S}/CPAN/arch/5.24/aarch64-linux
     rm -rf ${S}/CPAN/arch/5.24/i386-linux-thread-multi-64int
     rm -rf ${S}/CPAN/arch/5.24/x86_64-linux-thread-multi
     rm -rf ${S}/CPAN/arch/5.24/arm-linux-gnueabihf-thread-multi-64int
     rm -rf ${S}/Bin/MSWin32-x86-multi-thread
-    rm -rf ${S}/Bin/aarch64-linux
+    # rm -rf ${S}/Bin/aarch64-linux
     rm -rf ${S}/Bin/arm-linux
     rm -rf ${S}/Bin/darwin-x86_64
     rm -rf ${S}/Bin/darwin

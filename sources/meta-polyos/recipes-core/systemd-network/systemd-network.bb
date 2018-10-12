@@ -22,4 +22,4 @@ do_install () {
 FILES_${PN} += "{sysconfdir}/systemd/network/*"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-COMPATIBLE_MACHINE = "(mx6|mx6ul|mx7)"
+COMPATIBLE_MACHINE = "(mx6|mx6ul|mx7|voltastream-a64)"
